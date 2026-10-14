@@ -6,9 +6,28 @@ Previsão da inflação mensal (IPCA) a partir de séries do Banco Central (SGS)
 
 1. **Coleta** (`src/coleta.py`) — IPCA, Selic e câmbio mensais do SGS, desde 2003. ✅
 2. **Análise exploratória** (`notebooks/01_eda.ipynb`) ✅ — figuras em `reports/figures/`
-3. **Modelos clássicos de referência** (`notebooks/02_baselines_classicos.ipynb`)
-4. **Modelos de ML com backtest** (`notebooks/03_modelos_ml_backtest.ipynb`, `src/features.py`, `src/modelos.py`, `src/avaliacao.py`)
+3. **Backtest, baselines e modelos clássicos** (`notebooks/02_baselines_classicos.ipynb`, `src/avaliacao.py`, `src/modelos.py`) ✅
+4. **Modelos de ML e ablação** (`notebooks/03_modelos_ml_backtest.ipynb`)
 5. **App** (`app.py`)
+
+## Resultados até agora (backtest jan/2015 a set/2026)
+
+Janela expansiva com 141 origens; em cada uma o modelo treina com todo o passado e prevê 1 a 6 meses à frente.
+MAE em pontos percentuais:
+
+| Modelo | 1 mês | 3 meses | 6 meses |
+|---|---|---|---|
+| Ingênuo (repete o último valor) | 0,293 | 0,389 | 0,411 |
+| Ingênuo sazonal | 0,382 | 0,379 | 0,382 |
+| Média histórica | 0,315 | 0,310 | 0,308 |
+| ETS(A,N,A) | 0,263 | 0,314 | 0,321 |
+| **SARIMA(1,0,0)(1,0,0)₁₂** | **0,257** | **0,285** | **0,300** |
+| SARIMAX (+ Selic e câmbio) | 0,257 | 0,290 | 0,304 |
+
+- O SARIMA bate o ingênuo em todos os horizontes (−12% em 1 mês, −27% em 3 e 6; Diebold-Mariano p < 0,01).
+- Em 3 e 6 meses, o baseline mais difícil é a média histórica: o SARIMA a bate em 3 meses (−8%, p = 0,02), mas
+  não em 6 (−2%, p = 0,40).
+- Selic e câmbio, defasados em 6 meses para não haver vazamento, não melhoraram o SARIMA.
 
 ## Principais achados da análise exploratória
 
@@ -53,4 +72,7 @@ python -m venv .venv
 
 # executa um notebook e grava as saídas e as figuras
 cd notebooks && ../.venv/bin/jupyter nbconvert --to notebook --execute --inplace 01_eda.ipynb
+
+# testes (inclui o de vazamento: nenhum modelo pode usar dados posteriores à origem)
+.venv/bin/python -m pytest -q tests
 ```

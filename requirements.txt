@@ -2,6 +2,8 @@ python-bcb==0.4.0
 pandas==3.0.6
 matplotlib==3.11.2
 statsmodels==0.15.0
-# Notebooks
+scipy==1.18.1
+# Notebooks e testes
 ipykernel==7.4.0
 nbconvert==7.17.2
+pytest==9.1.1
