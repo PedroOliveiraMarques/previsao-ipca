@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Dados baixados/gerados (refeitos por src/coleta.py)
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
