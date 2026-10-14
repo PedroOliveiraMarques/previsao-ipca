@@ -1,0 +1,13 @@
+{
+  "fonte": "Banco Central do Brasil — SGS",
+  "series": {
+    "ipca": 433,
+    "selic": 4390,
+    "cambio": 3698
+  },
+  "data_download": "2026-10-14T13:03:58-03:00",
+  "periodo_inicio": "2003-01",
+  "periodo_fim": "2026-09",
+  "meses": 285,
+  "python_bcb": "0.4.0"
+}

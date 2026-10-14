@@ -18,13 +18,25 @@ Previsão da inflação mensal (IPCA) a partir de séries do Banco Central (SGS)
 | `selic` | 4390 | Selic acumulada no mês (%) |
 | `cambio` | 3698 | Dólar (venda), média mensal (R$/US$) |
 
-O mês corrente é descartado na coleta: a Selic dele ainda está incompleta.
+Período: desde jan/2003, com o regime de metas de inflação já consolidado.
+
+## Dados
+
+- **Baixar e usar são etapas separadas.** `src/coleta.py` baixa do SGS uma vez e grava a cópia bruta em
+  `data/raw/series_bcb.csv`. Os notebooks e o resto de `src/` só leem essa cópia (`carregar_series()`), sem chamar a API,
+  então quem clonar o repositório trabalha com exatamente os mesmos números.
+- **Corte no último mês completo das três séries**, descoberto pelo código: a Selic e o câmbio saem no início do mês
+  seguinte, mas o IPCA só é divulgado pelo IBGE entre os dias 8 e 11. O mês corrente nunca entra (a Selic dele ainda
+  está acumulada só até a data do download).
+- **Metadados** em `data/raw/metadados.json`: data do download, período, códigos das séries e versão do `python-bcb`.
+- **Formato largo** (uma coluna por série, uma linha por mês): as três séries têm a mesma frequência e o mesmo índice
+  mensal, e os modelos usam cada variável como uma coluna (com suas defasagens), então o formato largo já é o que a
+  modelagem consome.
 
 ## Como rodar
 
 ```bash
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m src.coleta              # baixa (ou lê do cache) e salva em data/raw/
-.venv/bin/python -m src.coleta --atualizar  # força baixar tudo de novo
+.venv/bin/python -m src.coleta   # baixa do SGS e regrava data/raw/ (CSV + metadados)
 ```

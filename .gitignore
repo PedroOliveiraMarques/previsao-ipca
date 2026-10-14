@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# Dados baixados/gerados (refeitos por src/coleta.py)
-data/raw/*
+# data/raw/ é versionado (cópia congelada dos dados, para todos obterem os
+# mesmos números). data/processed/ é refeito a partir dele.
 data/processed/*
-!data/**/.gitkeep
+!data/processed/.gitkeep
